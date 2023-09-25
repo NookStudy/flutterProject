@@ -129,77 +129,68 @@ class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
     return Stack(
       children: [
         Scaffold(
-            appBar: AppBar(title: Text(widget.albumName!)),
-             body: 
-             
-              GridView.builder(
-                itemCount: _feed.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onLongPress: () async {
-                      HapticFeedback.mediumImpact();
-                      await _deleteFeed(_feed[index]);
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      color: const Color.fromRGBO(115, 115, 115, 1),
-                      child: Image.network(
-                        _feed[index].image,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                })),
-        if (_isUpload) ...[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.black38,
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.deepOrange,
+          appBar: AppBar(title: Text(widget.albumName!)),
+            floatingActionButton: 
+            SizedBox(
+              height: 100,
+              child: Column(
+                children: [
+                  _button(
+                      icon: Icons.refresh_outlined,
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        _getFeed(isRefresh: true);
+                      }),
+                  const SizedBox(height: 10),
+                  _button(
+                      icon: Icons.add_circle_outline_outlined,
+                      onTap: () async {
+                        HapticFeedback.mediumImpact();
+                        Map<String, String>? _images =
+                            await _imagePickerToUpload();
+                        if (_images != null) {
+                          await _toFirestore(_images);
+                        }
+                        setState(() {
+                          _isUpload = false;
+                        });
+                      })
+                ],
               ),
             ),
+            body: 
+            GridView.builder(
+              itemCount: _feed.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+              ),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onLongPress: () async {
+                    HapticFeedback.mediumImpact();
+                    await _deleteFeed(_feed[index]);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    color: const Color.fromRGBO(115, 115, 115, 1),
+                    child: Image.network(
+                      _feed[index].image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  
+                );
+                
+              }
+              
+            )
             
           ),
-        ],
-        //  FloatingActionButton(
-        //      SizedBox(
-        //       height: 100,
-        //       child: Column(
-        //         children: [
-        //           _button(
-        //               icon: Icons.refresh_outlined,
-        //               onTap: () {
-        //                 HapticFeedback.mediumImpact();
-        //                 _getFeed(isRefresh: true);
-        //               }),
-        //           const SizedBox(height: 10),
-        //           _button(
-        //               icon: Icons.add_circle_outline_outlined,
-        //               onTap: () async {
-        //                 HapticFeedback.mediumImpact();
-        //                 Map<String, String>? _images =
-        //                     await _imagePickerToUpload();
-        //                 if (_images != null) {
-        //                   await _toFirestore(_images);
-        //                 }
-        //                 setState(() {
-        //                   _isUpload = false;
-        //                 });
-        //               })
-        //         ],
-        //       ),
-        //     ),
-        //  )
       ],
-      
+    // 
     );
   }
 

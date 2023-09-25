@@ -1,6 +1,7 @@
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:photofolio/pages/photo.dart';
 
 // ignore: must_be_immutable
 class AlbumScreen extends StatefulWidget {
@@ -22,7 +23,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
       .ref().child('test_movie_1.png');
     print('pathref:$pathReference');
     String url = await pathReference.getDownloadURL() as String;
-    downloadURL = url;
+    setState(() {
+      downloadURL = url;
+    });
     print(url);
   }
   // Future<String> getUrl() async{ 
@@ -60,20 +63,29 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   ElevatedButton(
                     onPressed: (){
                       printRefs();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PhotoSelect(albumName: 'Name'))); 
                     }, child: Text('print')),
                   Container(
                     alignment: Alignment.center,
                     child: Image.asset('assets/images/Main.jpg'),
                   ),
                   Container(
-                    alignment: Alignment.center,
-                    child: Image.network('https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/test_movie_1.png?alt=media&token=8b3b87b5-dfa4-495b-8048-ffd76936ae6b'),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image:AssetImage('assets/images/Main.jpg')
+                        // image:(downloadURL!='')?('$downloadURL'):
+                      )
+                    ),
+                    // child: Image.network('https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/test_movie_1.png?alt=media&token=8b3b87b5-dfa4-495b-8048-ffd76936ae6b'),
                     // child: Image.network(downloadURL!),
                   ),
                 
                   Container(
                     alignment: Alignment.center,
                     child: Image.asset('assets/images/Main.jpg'),
+                    
+                    
                   ),
                   Container(
                     alignment: Alignment.center,

@@ -1,8 +1,16 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:photofolio/color_schemes.g.dart';
 import 'package:photofolio/pages/Home.dart';
+import 'package:photofolio/pages/inifinityscroll.dart';
 
 void main()  async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +25,8 @@ Future<void> initializeDefault() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+
 
   // This widget is the root of your application.
   @override
@@ -39,6 +49,14 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+
+  //   FirebaseAuth.instance.authStateChanges()
+  // .listen((User? user) {
+  //   if (user != null) {
+  //     print(user.uid);
+  //   }
+  // });
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -46,6 +64,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   late PersistentTabController _controller;
+
+  String? downloadURL = '' ;
+
+  void getImage() async{
+    Reference _ref = FirebaseStorage.instance.ref().child('test/Main');
+    String _url = await _ref.getDownloadURL();
+    setState(() {
+      downloadURL = _url;
+    });
+  }
 
   @override
   void initState(){
@@ -90,14 +118,42 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _buildScreens(){
     return[
       const HomeScreen(),
+      // Container(
+      //   child: const Center(
+      //     child: Text('home'),
+      //   ),
+      // ),
+      FirebaseFirestoreScreen(),
       Container(
-        child: const Center(
-          child: Text('home'),
-        ),
-      ),
-      Container(
-        child: const Center(
-          child: Text('home'),
+        child: Center(
+          child: Column(
+            children: [
+              Text('home'),
+              ElevatedButton(
+              onPressed: () =>  createFirestore(),
+              child: Text('createData')),
+              ElevatedButton(
+              onPressed: () =>  uploadImage(),
+              child: Text('uploadImage')),
+              ElevatedButton(
+              onPressed: () =>  getImage(),
+              child: Text('getImage')),
+              
+              Container(
+                child: Column(),
+                decoration: (downloadURL == '') ? 
+                BoxDecoration()
+                : BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    // image:AssetImage('assets/images/Main.jpg')
+                    image:NetworkImage('$downloadURL')
+                  )
+                ),
+              ),
+            ],
+          ),
+          
         ),
       ),
       // const PageB1(),
@@ -130,5 +186,30 @@ class _MyHomePageState extends State<MyHomePage> {
         inactiveColorPrimary: Colors.grey,
       ),
     ];
+  }
+
+  void createFirestore() async{
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    for (int i = 0; i < 100; i++) {
+      await _firestore.collection("infinity_scroll").doc().set(InfinityScrollModel(
+          id: i, name: "Tyger $i", dateTime: Timestamp.now()).toJson());
+      }
+  }
+
+  void uploadImage() async{
+
+    FirebaseStorage _storage = FirebaseStorage.instance;
+  Reference _ref = _storage.ref("test/text.txt");
+    _ref.putString("Hello World !!");
+
+    String _image = "assets/images/Main.jpg";
+    String _imageName = "Main";
+    Directory systemTempDir = Directory.systemTemp;
+    ByteData byteData = await rootBundle.load(_image);
+    File file = File("${systemTempDir.path}/$_imageName.jpg");
+    await file.writeAsBytes(byteData.buffer.asUint8List(
+                        byteData.offsetInBytes, byteData.lengthInBytes));
+
+    FirebaseStorage.instance.ref("test/$_imageName.jpg").putFile(file);
   }
 }

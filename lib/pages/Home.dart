@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           child: TextButton(
                           onPressed: (){
-                            Navigator.of(context).push(_createRoute(albumName!));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseStorageScreen(albumName: 'Model')));
                           },
                           child: Image.asset('assets/images/Main2.jpg',fit: BoxFit.cover,width: 200,height: 165,),
                           ),
