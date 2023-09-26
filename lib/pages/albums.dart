@@ -8,6 +8,11 @@ class AlbumScreen extends StatefulWidget {
   
   String? albumName = '';
   AlbumScreen({super.key, required this.albumName});
+  
+  List<String> albums = [
+    'https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/nightvision%2Fpexels-well-naves-1829067.jpg?alt=media&token=aafa8cfc-f961-4864-b29f-d827a65a4a1b',
+    'https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/nightvision%2Fpexels-jesper-18331707.jpg?alt=media&token=529efbc2-4256-48a7-8027-e42e3dec1441'
+  ];
 
 
 
@@ -63,22 +68,24 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   ElevatedButton(
                     onPressed: (){
                       printRefs();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PhotoSelect(albumName: 'Name'))); 
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PhotoSelect(albumName: 'Name',imageURL: 'dd',))); 
                     }, child: Text('print')),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Image.asset('assets/images/Main.jpg'),
-                  ),
                   Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image:AssetImage('assets/images/Main.jpg')
+                      )
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image:NetworkImage('https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/nightvision%2Fpexels-well-naves-1829067.jpg?alt=media&token=aafa8cfc-f961-4864-b29f-d827a65a4a1b')
                         // image:(downloadURL!='')?('$downloadURL'):
                       )
                     ),
-                    // child: Image.network('https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/test_movie_1.png?alt=media&token=8b3b87b5-dfa4-495b-8048-ffd76936ae6b'),
-                    // child: Image.network(downloadURL!),
                   ),
                 
                   Container(

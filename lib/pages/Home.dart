@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/albums.dart';
 import 'package:photofolio/pages/feedalbum.dart';
+import 'package:photofolio/pages/listAlbum.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,16 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          
                           child: TextButton(
-                          onPressed: ()async{
-
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumScreen(albumName: 'Model')));
-                          },
-                          child: Image.asset('assets/images/long.jpg',fit: BoxFit.cover,width: double.infinity,height: 170,),
+                            onPressed: ()async{
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumScreen(albumName: 'Model')));
+                            },
+                            child: Image.asset('assets/images/long.jpg',fit: BoxFit.cover,width: double.infinity,height: 170,),
                           ),
                         ),
-                        SizedBox(child: Text('Model',style: TextStyle(fontSize: 14),),height: 20)
+                        SizedBox(child: Text('Albumscreen',style: TextStyle(fontSize: 14),),height: 20)
                       ]
                     )
                   ),
@@ -75,12 +74,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TextButton(
                           onPressed: ()async{
 
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseStorageScreen(albumName: 'Model')));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => FirebaseStorageScreen(albumName: 'Night Vision')));
                           },
                           child: Image.asset('assets/images/night.jpg',fit: BoxFit.cover,width: double.infinity,height: 170,),
                           ),
                         ),
-                        SizedBox(child: Text('Night Vision',style: TextStyle(fontSize: 14),),height: 20)
+                        SizedBox(child: Text('FirebaseStorage',style: TextStyle(fontSize: 14),),height: 20)
                       ]
                     )
                   ),
@@ -92,12 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TextButton(
                           onPressed: (){
                             albumName = 'ABCDEFGHIJKLMN14';
-                            Navigator.of(context).push(_createRoute(albumName!));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ListAlbumScreen(albumName: 'Night Vision')));
                           },
-                          child: Image.asset('assets/images/Main.jpg',fit: BoxFit.cover,width: 200,height: 175,),
+                          child: Image.asset('assets/images/night.jpg',fit: BoxFit.cover,width: 200,height: 175,),
                           ),
                         ),
-                        Text('ABCDEFGHIJKLMN14',style: TextStyle(fontSize: 14),)
+                        Text('Listscreeen',style: TextStyle(fontSize: 14),)
                       ]
                     )
                   ),

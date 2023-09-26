@@ -20,6 +20,7 @@ class _FeedModel {
     required this.path,
     required this.dateTime,
   });
+  
   factory _FeedModel.fromFirestore(Map<String, dynamic> json) {
     return _FeedModel(
       uid: json["uid"],
@@ -183,21 +184,15 @@ class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
                   ),
                   
                 );
-                
               }
-              
             )
-            
           ),
       ],
     // 
     );
   }
 
-  Container _button({
-    required IconData icon,
-    required Function() onTap,
-  }) {
+  Container _button({ required IconData icon, required Function() onTap,}) {
     return Container(
         width: 45,
         height: 45,
