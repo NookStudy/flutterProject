@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,7 +51,7 @@ class FirebaseStorageScreen extends StatefulWidget {
 
 class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
   List<_FeedModel> _feed = [];
-  final String _uid = "123456789";
+  final String _uid = FirebaseAuth.instance.currentUser!.uid;
   bool _isUpload = false;
 
   Future<Map<String, String>?> _imagePickerToUpload() async {
@@ -61,7 +62,7 @@ class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
     ImagePicker _picker = ImagePicker();
     XFile? _images = await _picker.pickImage(source: ImageSource.gallery);
     if (_images != null) {
-      String _imageRef = "nightvision/${_uid}_$_dateTime";
+      String _imageRef = "${_uid}$_dateTime";
       File _file = File(_images.path);
       await FirebaseStorage.instance.ref(_imageRef).putFile(_file);
       final String _urlString =
@@ -140,7 +141,10 @@ class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
                       icon: Icons.refresh_outlined,
                       onTap: () {
                         HapticFeedback.mediumImpact();
-                        _getFeed(isRefresh: true);
+                        setState(() {
+                          _getFeed(isRefresh: true);
+                          
+                        });
                       }),
                   const SizedBox(height: 10),
                   _button(

@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:photofolio/model/feedmodel.dart';
 import 'package:photofolio/pages/mainscreen.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -181,7 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   postDetailsToFirestore() async {
-
+    final db = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     print(user!.email);
     print(user.uid);
@@ -190,6 +192,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     showSnackBar("Account created successfully :)",
         const Duration(milliseconds: 1000));
+
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentReference<Map<String, dynamic>> _reference =
+          FirebaseFirestore.instance.collection(uid).doc();
+    await db.collection(uid).doc('firstimage').set(FeedModel(
+        uid: uid,
+        docId: 'firstimage',
+        image: 'https://firebasestorage.googleapis.com/v0/b/photofolio-83774.appspot.com/o/model%2Fpexels-alvin-caal-2853592.jpg?alt=media&token=f2e5c2f2-9d37-4854-835c-6a9ffa4f31e2',
+        path: 'model/pexels-alvin-caal-2853592.jpg',
+        dateTime: Timestamp.now(),
+        albumName: 'Basic Album',
+        thumbnail: true
+      ).toFirestore());
 
     Navigator.pushAndRemoveUntil(
         (context),

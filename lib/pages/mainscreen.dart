@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:photofolio/pages/Home.dart';
-import 'package:photofolio/pages/inifinityscroll.dart';
+import 'package:photofolio/model/inifinityscroll.dart';
 import 'package:photofolio/pages/listAlbum.dart';
 
 
@@ -180,10 +180,13 @@ class _MainScreenState extends State<MainScreen> {
 
   void uploadImage() async{
 
+    //파이어 스토리지
     FirebaseStorage _storage = FirebaseStorage.instance;
-  Reference _ref = _storage.ref("test/text.txt");
-    _ref.putString("Hello World !!");
+    //스토리지 위치
+    Reference _ref = _storage.ref("test/text.txt");
+      _ref.putString("Hello World !!");
 
+    //이미지피커 들어갈 부분
     String _image = "assets/images/Main.jpg";
     String _imageName = "Main";
     Directory systemTempDir = Directory.systemTemp;
