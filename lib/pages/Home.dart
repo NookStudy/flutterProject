@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.add_circle_outline_outlined,
                     onTap: () async {
                       HapticFeedback.mediumImpact();
-                      CreateAlbumPage();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAlbumPage()));
                       // setState(() {
                       //   _isUpload = false;
                       // });
@@ -107,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Center(
           child: (_feed == null)
       ? CircularProgressIndicator() // _feed가 null이면 로딩 표시
-      : _feed.isEmpty
-          ? Text('피드가 없습니다.') 
+      // : _feed.isEmpty
+      //     ? Text('피드가 없습니다.') 
           : Container(
             child: GridView.builder(
               itemCount: _feed.length,
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(child: Text('Albumscreen',style: TextStyle(fontSize: 14),),height: 20)
+                        SizedBox(child: Text(_feed[index].albumName,style: TextStyle(fontSize: 14),),height: 20)
                       ]
                     )
                   ),

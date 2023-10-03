@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photofolio/backup/feedalbum.dart';
+import 'package:photofolio/model/feedmodel.dart';
 
 class CreateAlbumPage extends StatefulWidget {
   @override
@@ -10,6 +15,7 @@ class CreateAlbumPage extends StatefulWidget {
 
 class _CreateAlbumPageState extends State<CreateAlbumPage> {
   final TextEditingController _newValueController = TextEditingController();
+   String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                 // createAlbum 함수 호출하여 newValue 전달
                 createAlbum(newValue);
               },
-              child: Text('Create Album'),
+              child: Text('Select First Image'),
             ),
           ],
         ),
@@ -41,46 +47,59 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
   }
 
   void createAlbum(String newValue) async {
-  try {
-
-      /**
-       * 
-       * 업로드 이미지도 같이 올려야 하므로 imagepicker 추가할 것.
-       */
-
-
-
-
-    // Firestore에 새 앨범 데이터 추가
-    final albumData = {
-      'albumName': newValue, // 새 앨범의 이름 설정
-      'thumbnail': true, // 기본적으로 앨범을 썸네일로 설정
-      // 다른 필드들도 추가 가능
-    };
-
-    final newAlbumRef = await FirebaseFirestore.instance.collection(uid).add(albumData);
-
-    // Firebase Storage에 이미지 업로드 (필요에 따라)
-    final imageUploadTask = FirebaseStorage.instance.ref('albums/${newAlbumRef.id}/cover.jpg')
-        .putFile(/* 여기에 업로드할 이미지 파일 */);
-
-    final imageSnapshot = await imageUploadTask.whenComplete(() {});
-
-    if (imageSnapshot.state == TaskState.success) {
-      // 이미지 업로드 성공
-      final imageUrl = await imageSnapshot.ref.getDownloadURL();
-      // Firestore에 이미지 URL 업데이트
-      await newAlbumRef.update({'imageUrl': imageUrl});
-    } else {
-      // 이미지 업로드 실패
-      // 실패 처리 로직 추가
+   
+    Map<String, String>? _images = await _imagePickerToUpload(newValue);
+    if (_images != null) {
+      await _toFirestore(_images);
     }
-
-    // 앨범 생성 성공
-    print('앨범 생성 성공');
-  } catch (error) {
-    // 앨범 생성 중 오류 발생
-    print('앨범 생성 중 오류: $error');
   }
-}
+
+  //이미지피커를 통한 strage 업로드. firestore연동을 위해 url을 리턴
+  Future<Map<String, String>?> _imagePickerToUpload(String newValue) async {
+
+    final String _dateTime = DateTime.now().millisecondsSinceEpoch.toString();
+    ImagePicker _picker = ImagePicker();
+    XFile? _images = await _picker.pickImage(source: ImageSource.gallery);
+    if (_images != null) {
+      //파이어 스토리지 저장경로
+      String _imageRef = "${uid}/$newValue$_dateTime";
+      //업로드할 파일의 내부경로
+      File _file = File(_images.path);
+      //스토리지에 올리고
+      await FirebaseStorage.instance.ref(_imageRef).putFile(_file);
+      //url 따와서
+      final String _urlString =
+          await FirebaseStorage.instance.ref(_imageRef).getDownloadURL();
+      return {
+        "image": _urlString,
+        "path": _imageRef,
+        "albumname" : newValue
+      };
+    } else {
+      return null;
+    }
+  }
+
+  //스토리지 url을 스토어에 저장(UPLOAD&CREATE)
+  Future<void> _toFirestore(Map<String, String> images) async {
+    try {
+      DocumentReference<Map<String, dynamic>> _reference =
+          FirebaseFirestore.instance.collection("${uid}").doc();
+      
+          await _reference.set(FeedModel(
+          uid: uid,
+          docId: _reference.id,
+          image: images["image"].toString(),
+          path: images["path"].toString(),
+          dateTime: Timestamp.now(),
+          albumName: images["albumname"].toString(),
+          thumbnail: true
+        ).toFirestore());
+      
+      
+    } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.message ?? "")));
+    }
+  }
 }
