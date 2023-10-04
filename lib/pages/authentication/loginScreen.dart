@@ -102,11 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.white,
+            color: Colors.black,
             child: Padding(
               padding: const EdgeInsets.all(36.0),
               child: Form(
@@ -115,6 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    const Text('Welcome to PhotoFolio',style: TextStyle(color: Colors.white,fontSize: 30),),
+                    const SizedBox(height: 30,),
                     emailField,
                     const SizedBox(height: 25),
                     passwordField,

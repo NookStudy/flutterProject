@@ -99,7 +99,7 @@ class _ListAlbumScreenState extends State<ListAlbumScreen> {
         ),
       ),
       body: Center( 
-        child: (_feed.isEmpty)
+        child: (_feed==null)
         ? CircularProgressIndicator()
             
         : Container(

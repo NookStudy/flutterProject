@@ -11,6 +11,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:photofolio/pages/Home.dart';
 import 'package:photofolio/model/inifinityscroll.dart';
 import 'package:photofolio/pages/listAlbum.dart';
+import 'package:photofolio/pages/profile.dart';
 
 
 
@@ -97,47 +98,47 @@ class _MainScreenState extends State<MainScreen> {
 
       //page2
       // infinityscroll
-      FirebaseFirestoreScreen(),
+      MoreScreen(),
       // ListAlbumScreen(albumName: 'listAlbum'),
 
       //page3
-      Container(
-        child: Center(
-          child: Column(
-            children: [
-              Text('home'),
-              ElevatedButton(
-              onPressed: () =>  createFirestore(),
-              child: Text('createData')),
-              ElevatedButton(
-              onPressed: () =>  uploadImage(),
-              child: Text('uploadImage')),
-              ElevatedButton(
-                onPressed: () =>  getImage(),
-                child: Text('getImage')
-              ),
-              ElevatedButton(
-                onPressed: () =>  getList(),
-                child: Text('getList')
-              ),
+      // Container(
+      //   child: Center(
+      //     child: Column(
+      //       children: [
+      //         Text('home'),
+      //         ElevatedButton(
+      //         onPressed: () =>  createFirestore(),
+      //         child: Text('createData')),
+      //         ElevatedButton(
+      //         onPressed: () =>  uploadImage(),
+      //         child: Text('uploadImage')),
+      //         ElevatedButton(
+      //           onPressed: () =>  getImage(),
+      //           child: Text('getImage')
+      //         ),
+      //         ElevatedButton(
+      //           onPressed: () =>  getList(),
+      //           child: Text('getList')
+      //         ),
               
-              Container(
-                child: Column(),
-                decoration: (downloadURL == '') ? 
-                BoxDecoration()
-                : BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    // image:AssetImage('assets/images/Main.jpg')
-                    image:NetworkImage('$downloadURL')
-                  )
-                ),
-              ),
-            ],
-          ),
+      //         Container(
+      //           child: Column(),
+      //           decoration: (downloadURL == '') ? 
+      //           BoxDecoration()
+      //           : BoxDecoration(
+      //             image: DecorationImage(
+      //               fit: BoxFit.cover,
+      //               // image:AssetImage('assets/images/Main.jpg')
+      //               image:NetworkImage('$downloadURL')
+      //             )
+      //           ),
+      //         ),
+      //       ],
+      //     ),
           
-        ),
-      ),
+      //   ),
+      // ),
       // const PageB1(),
       // const PageC1(),
     ];
@@ -146,20 +147,28 @@ class _MainScreenState extends State<MainScreen> {
   List<PersistentBottomNavBarItem> _navBarsItems(){
     return[
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.image,size: 30,), //아이콘 설정
+        icon: const Icon(Icons.home,size: 30,), //아이콘 설정
         // title: 'Home',  //텍스트 설정
         activeColorPrimary: Colors.black,      //기본색
         activeColorSecondary: Colors.yellow,    //반전 
         inactiveColorPrimary: Colors.grey, //비활성
         inactiveColorSecondary: Colors.purple 
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.search,size: 37),
-        // title: ("Search"),
-        activeColorPrimary: Colors.black,
-        activeColorSecondary: Colors.red,
-        inactiveColorPrimary: Colors.grey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.image,size: 30,), //아이콘 설정
+      //   // title: 'Home',  //텍스트 설정
+      //   activeColorPrimary: Colors.black,      //기본색
+      //   activeColorSecondary: Colors.yellow,    //반전 
+      //   inactiveColorPrimary: Colors.grey, //비활성
+      //   inactiveColorSecondary: Colors.purple 
+      // ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.search,size: 37),
+      //   // title: ("Search"),
+      //   activeColorPrimary: Colors.black,
+      //   activeColorSecondary: Colors.red,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.format_list_bulleted,size: 38),
         // title: ("Search"),

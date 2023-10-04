@@ -206,6 +206,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         thumbnail: true
       ).toFirestore());
 
+
     Navigator.pushAndRemoveUntil(
         (context),
         MaterialPageRoute(builder: (context) => MainScreen()),
